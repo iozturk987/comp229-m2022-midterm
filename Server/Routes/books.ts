@@ -65,14 +65,14 @@ router.post('/add', (req: express.Request, res: express.Response, next: express.
 });
 
 // GET the Book Details page in order to edit an existing Book
-router.get('/:id', (req, res, next) => {
+router.get('/:id', (req: express.Request, res: express.Response, next: express.NextFunction) => {
 
     /*****************
      * ADD CODE HERE *
      *****************/
      let id = req.params.id;
 
-     // pass the id to the db and read the movie into the edit page
+     // pass the id to the db and read the book into the edit page
      book.findById(id, {}, {}, function(err, bookToEdit)
      {
        if(err)
@@ -87,16 +87,17 @@ router.get('/:id', (req, res, next) => {
 });
 
 // POST - process the information passed from the details form and update the document
-router.post('/:id', (req, res, next) => {
+router.post('/:id', (req: express.Request, res: express.Response, next: express.NextFunction) => {
 
     /*****************
      * ADD CODE HERE *
      *****************/
      let id = req.params.id;
 
-     // instantiate a new Movie to Edit
+     // instantiate a new Book to Edit
      let updatedBook = new book
      ({
+      "_id": id,
       "Title": req.body.bookTitle,
       "Description": req.body.bookDescription,
       "Price": req.body.bookPrice,
@@ -104,7 +105,7 @@ router.post('/:id', (req, res, next) => {
       "Genre": req.body.bookGenre
      });
    
-     // update the movie in the database
+     // update the book in the database
      book.updateOne({_id: id}, updatedBook, function(err: CallbackError)
      {
        if(err)
@@ -113,18 +114,32 @@ router.post('/:id', (req, res, next) => {
          res.end(err);
        }
    
-       // edit was successful -> go to the movie-list page
+       // edit was successful -> go to the books page
        res.redirect('/books');
      });
 
 });
 
 // GET - process the delete by user id
-router.get('/delete/:id', (req, res, next) => {
+router.get('/delete/:id', (req: express.Request, res: express.Response, next: express.NextFunction) => {
 
     /*****************
      * ADD CODE HERE *
      *****************/
+     let id = req.params.id;
+
+     // pass the id to the database and delete the book
+     book.remove({_id: id}, function(err: CallbackError)
+     {
+       if(err)
+       {
+         console.error(err);
+         res.end(err);
+       }
+   
+       // delete was successful
+       res.redirect('/books');
+     });
 });
 
 
