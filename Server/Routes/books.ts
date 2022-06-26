@@ -1,5 +1,6 @@
 // modules required for routing
 import express from 'express';
+import { CallbackError } from 'mongoose';
 const router = express.Router();
 export default router;
 
@@ -26,20 +27,40 @@ router.get('/', (req, res, next) =>
 });
 
 //  GET the Book Details page in order to add a new Book
-router.get('/add', (req, res, next) => {
+router.get('/add', (req: express.Request, res: express.Response, next: express.NextFunction) => {
 
     /*****************
      * ADD CODE HERE *
      *****************/
+     res.render('index', { title: 'Add a book', page: 'add' });
 
 });
 
 // POST process the Book Details page and create a new Book - CREATE
-router.post('/add', (req, res, next) => {
+router.post('/add', (req: express.Request, res: express.Response, next: express.NextFunction) => {
 
     /*****************
      * ADD CODE HERE *
      *****************/
+     let newBook = new book
+     ({
+       "Title": req.body.bookTitle,
+       "Description": req.body.bookDescription,
+       "Price": req.body.bookPrice,
+       "Author": req.body.bookAuthor,
+       "Genre": req.body.bookGenre
+     });
+     book.create(newBook, function(err: CallbackError)
+     {
+       if(err)
+       {
+         console.error(err);
+         res.end(err);
+       }
+   
+       // new book has been added -> refresh the book-list
+       res.redirect('/books');
+     })
 
 });
 
