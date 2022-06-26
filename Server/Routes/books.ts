@@ -70,6 +70,20 @@ router.get('/:id', (req, res, next) => {
     /*****************
      * ADD CODE HERE *
      *****************/
+     let id = req.params.id;
+
+     // pass the id to the db and read the movie into the edit page
+     book.findById(id, {}, {}, function(err, bookToEdit)
+     {
+       if(err)
+       {
+         console.error(err);
+         res.end(err);
+       }
+   
+       // show the edit view with the data
+       res.render('index', { title: 'Edit', page: 'edit' })
+     });
 });
 
 // POST - process the information passed from the details form and update the document
@@ -78,6 +92,30 @@ router.post('/:id', (req, res, next) => {
     /*****************
      * ADD CODE HERE *
      *****************/
+     let id = req.params.id;
+
+     // instantiate a new Movie to Edit
+     let updatedBook = new book
+     ({
+      "Title": req.body.bookTitle,
+      "Description": req.body.bookDescription,
+      "Price": req.body.bookPrice,
+      "Author": req.body.bookAuthor,
+      "Genre": req.body.bookGenre
+     });
+   
+     // update the movie in the database
+     book.updateOne({_id: id}, updatedBook, function(err: CallbackError)
+     {
+       if(err)
+       {
+         console.error(err);
+         res.end(err);
+       }
+   
+       // edit was successful -> go to the movie-list page
+       res.redirect('/books');
+     });
 
 });
 
