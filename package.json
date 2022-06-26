@@ -1,6 +1,6 @@
 {
-  "name": "comp229-m2022-midterm-typescript",
-  "version": "0.0.4",
+  "name": "comp229-m2022-midterm-301234611",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "node server.js"
